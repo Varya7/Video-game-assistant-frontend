@@ -41,7 +41,7 @@ export default {
       this.games.push(game);
     },
     createScene(scene) {
-      state.games[state.selectedGameId].scenes.push({
+      state.games[state.games.findIndex(game => game.id === state.selectedGameId)].scenes.push({
         id: scene.id,
         name: scene.name,
         scripts: scene.scripts,
