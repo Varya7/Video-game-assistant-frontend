@@ -6,7 +6,7 @@
   </div>
 </template>
 
-<script>
+<script type="ts">
 import Sidebar from "@/components/Sidebar";
 import Main from "@/components/Main";
 import SceneItem from "@/components/SceneItem.vue";
@@ -40,15 +40,24 @@ export default {
       });
       this.games.push(game);
     },
+    createScene(game) {
+      state.games[state.selectedGameId].scenes.push({
+        id: game.id.toString(),
+        name: game.title,
+        scenes: [],
+        characters: [],
+      });
+      this.games.push(game);
+    },
     setCreateScriptModalState(state) {
       this.createScriptModalOpened = state;
       if (!state) {
         this.createScriptGameId = null;
       }
     },
-    addScript(game, scene) {
+    addScript(scene) {
       this.setCreateScriptModalState(true);
-      this.createScriptGameId = game.id;
+      this.createScriptGameId = state.selectedGameId;
       this.createScriptSceneId = scene;
     },
     saveScript() {
