@@ -3,6 +3,7 @@
     <Sidebar :scenes="state.games[state.games.findIndex(game => game.id === state.selectedGameId)].scenes" @create="createScene" @addScript="addScript"/>
     <Main/>
     <ModalWindow v-if="createScriptModalOpened" :header="'Создать сценарий'" @closeModal="setCreateScriptModalState" @validate-request="saveScript"><CreateScriptModal ref="child"/></ModalWindow>
+    <ModalWindow v-if="createSceneModalOpened" :header="'Создать сцену'" @closeModal="setCreateSceneModalState" @validate-request="saveScene"><CreateSceneModal ref="sceneChild"/></ModalWindow>
   </div>
 </template>
 
@@ -13,6 +14,7 @@ import SceneItem from "@/components/SceneItem.vue";
 import ModalWindow from "@/components/ModalWindow.vue";
 import CreateScriptModal from "@/components/CreateScriptModal.vue";
 import {submitData} from "@/api/api.ts";
+import CreateSceneModal from "@/components/CreateSceneModal.vue";
 import {state, defaultState} from '@/store.ts';
 import './types.ts';
 import {Character, Script} from "@/types.ts";
@@ -26,6 +28,7 @@ export default {
   },
   components: {
     CreateScriptModal,
+    CreateSceneModal,
     ModalWindow,
     Sidebar,
     Main
@@ -54,13 +57,42 @@ export default {
         this.createScriptGameId = null;
       }
     },
+    setCreateSceneModalState(state) {
+      this.createSceneModalOpened = state;
+    },
     addScript(scene) {
       this.setCreateScriptModalState(true);
       this.createScriptGameId = state.selectedGameId;
       this.createScriptSceneId = scene;
     },
+    addScene() {
+      this.setCreateScriptModalState(true);
+    },
     saveScript() {
       if(this.$refs.child.validate()) {
+        let child = this.$refs.child;
+        let game = state.games[state.games.findIndex(game => game.id === this.createScriptGameId)];
+        let scenes = game.scenes;
+        scenes[scenes.findIndex(gameId => gameId === this.createScriptSceneId)].scripts.push({
+          id: Date.now(),
+          name: child.name,
+          answersCount: child.answers_count,
+          branchesCount: child.branches_count,
+          character: {},
+          description: child.description,
+          getsItem: child.itemData.gets,
+          itemName: child.itemData.name,
+          itemCondition: child.itemData.condition,
+          getsInfo: child.infoData.gets,
+          infoName: child.infoData.name,
+          infoCondition: child.infoData.condition,
+          additional: child.additional
+        });
+        this.setCreateScriptModalState(false);
+      }
+    },
+    saveScene() {
+      if (this.$refs.sceneChild.validate()) {
         let child = this.$refs.child;
         let game = state.games[state.games.findIndex(game => game.id === this.createScriptGameId)];
         let scenes = game.scenes;
@@ -89,6 +121,7 @@ export default {
         {id: 2, title: 'Game 2', scripts: [], characters: []},
       ],
       createScriptModalOpened: false,
+      createSceneModalOpened: true,
       createScriptGameId: null,
       scenes: []
     };
