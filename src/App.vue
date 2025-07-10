@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Sidebar :games="state.games" @create="createGame" @addScript="addScript"/>
+    <Sidebar :scenes="state.games[state.selectedGameId].scenes" @create="createGame" @addScript="addScript"/>
     <Main/>
     <ModalWindow v-if="createScriptModalOpened" :header="'Создать сценарий'" @closeModal="setCreateScriptModalState" @validate-request="saveScript"><CreateScriptModal ref="child"/></ModalWindow>
   </div>

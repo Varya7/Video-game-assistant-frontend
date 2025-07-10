@@ -1,6 +1,6 @@
 ﻿<template>
   <div id="scenes">
-    <SceneItem v-for="scene of scenes" v-bind:scene="scene" @addScript="addScript" />
+    <SceneItem v-for="scene of scenes" :scene="scene" @addScript="addScript" />
   </div>
 </template>
 
