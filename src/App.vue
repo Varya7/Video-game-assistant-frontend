@@ -79,8 +79,8 @@ export default {
           infoCondition: child.infoData.condition,
           additional: child.additional
         });
+        this.setCreateScriptModalState(false);
       }
-      this.setCreateScriptModalState(false);
     }
   },
   data() {
