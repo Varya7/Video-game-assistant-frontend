@@ -9,8 +9,8 @@ export default {
   data() {
     return {
       name: '',
-      answers_count: 0,
-      branches_count: 0,
+      answers_count: 1,
+      branches_count: 1,
       characters: [],
       description: '',
       itemData: {},
@@ -87,14 +87,14 @@ export default {
       <div class="create-script-modal-count-answers">
         <div class="create-script-modal-count-branches">
           <label class="create-script-modal-count-answers-label label" for="create-script-modal-count-answers-input">Количество ответов:</label>
-          <input class="input number-input" id="create-script-modal-count-answers-input" type="number" v-model="answers_count" :class="{error: this.errors.answers_count}" />
+          <input class="input number-input" id="create-script-modal-count-answers-input" type="number" v-model="answers_count" min="1" :class="{error: this.errors.answers_count}" />
         </div>
         <span class="error-label" v-if="this.errors.answers_count"> Это поле обязательно для заполнения</span>
       </div>
       <div class="create-script-modal-count-branches">
         <div class="create-script-modal-count-branches">
           <label class="create-script-modal-count-branches-label label" for="create-script-modal-count-branches-input">Количество сюжетных веток:</label>
-          <input class="input number-input" id="create-script-modal-count-branches-input" type="number" v-model="branches_count" :class="{error: this.errors.branches_count}" />
+          <input class="input number-input" id="create-script-modal-count-branches-input" type="number" v-model="branches_count" min="1" :class="{error: this.errors.branches_count}" />
         </div>
         <span class="error-label" v-if="this.errors.branches_count"> Это поле обязательно для заполнения</span>
       </div>
