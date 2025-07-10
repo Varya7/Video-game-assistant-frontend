@@ -8,9 +8,68 @@ export default {
   components: {CharacterItem, Scrollview, PlayerGetsSettings},
   data() {
     return {
+      name: '',
       answers_count: 0,
       branches_count: 0,
+      characters: [],
+      description: '',
+      itemData: {},
+      infoData: {},
+      additional: '',
+      fieldsToValidate: ['name', 'answers_count', 'branches_count', 'description'],
+      errors: {
+        name: false,
+        answers_count: false,
+        branches_count: false,
+        characters: false,
+        description: false
+      }
     };
+  },
+  methods: {
+    validate() {
+      this.resetErrors();
+      if (this.$refs.playerGetsSettingsItem && this.$refs.playerGetsSettingsItem.validate() && this.$refs.playerGetsSettingsInfo && this.$refs.playerGetsSettingsInfo.validate()){
+        this.itemData = this.$refs.playerGetsSettingsItem.getFormData();
+        this.infoData = this.$refs.playerGetsSettingsInfo.getFormData();
+        const errors = [];
+
+        const fieldLabels = {
+          'name': 'Название',
+          'answers_count': 'Количество ответов',
+          'branches_count': 'Количество сюжетных веток',
+          'characters': 'Персонажи',
+          'description': 'Краткое содержание'
+        };
+
+        for (const field of this.fieldsToValidate) {
+          const value = this[field];
+
+          if (field === 'characters') {
+            if (value.length === 0) {
+              errors.push(`Поле "${fieldLabels[field]}" обязательно для заполнения`);
+              this.errors[field] = true;
+            }
+          } else if (typeof value === 'string') {
+            if (!value.trim()) {
+              errors.push(`Поле "${fieldLabels[field]}" обязательно для заполнения`);
+              this.errors[field] = true;
+            }
+          } else if (value === null || value === undefined || value === 0) {
+            errors.push(`Поле "${fieldLabels[field]}" обязательно для заполнения`);
+            this.errors[field] = true;
+          }
+
+        }
+
+        return !errors.length;
+      }
+    },
+    resetErrors() {
+      for (const field in this.errors) {
+        this.errors[field] = false;
+      }
+    }
   }
 }
 </script>
@@ -19,39 +78,50 @@ export default {
   <div class="create-script-modal-container">
     <div class="create-script-modal-cell create-script-modal-name">
       <h2 class="create-script-modal-h2 create-script-modal-name-text">Имя</h2>
-      <input class="input" type="text" value="" />
+      <div class="input-wrapper">
+        <input class="input" type="text" v-model="name" :class="{error: this.errors.name}" />
+        <span class="error-label" v-if="this.errors.name">Это поле обязательно для заполнения</span>
+      </div>
     </div>
     <div class="create-script-modal-cell create-script-modal-count">
       <div class="create-script-modal-count-answers">
-        <label class="create-script-modal-count-answers-label label" for="create-script-modal-count-answers-input">Количество ответов:</label>
-        <input class="input number-input" id="create-script-modal-count-answers-input" type="number" :value="answers_count" />
+        <div class="create-script-modal-count-branches">
+          <label class="create-script-modal-count-answers-label label" for="create-script-modal-count-answers-input">Количество ответов:</label>
+          <input class="input number-input" id="create-script-modal-count-answers-input" type="number" v-model="answers_count" :class="{error: this.errors.answers_count}" />
+        </div>
+        <span class="error-label" v-if="this.errors.answers_count"> Это поле обязательно для заполнения</span>
       </div>
       <div class="create-script-modal-count-branches">
-        <label class="create-script-modal-count-branches-label label" for="create-script-modal-count-branches-input">Количество сюжетных веток:</label>
-        <input class="input number-input" id="create-script-modal-count-branches-input" type="number" :value="branches_count" />
+        <div class="create-script-modal-count-branches">
+          <label class="create-script-modal-count-branches-label label" for="create-script-modal-count-branches-input">Количество сюжетных веток:</label>
+          <input class="input number-input" id="create-script-modal-count-branches-input" type="number" v-model="branches_count" :class="{error: this.errors.branches_count}" />
+        </div>
+        <span class="error-label" v-if="this.errors.branches_count"> Это поле обязательно для заполнения</span>
       </div>
     </div>
     <div class="create-script-modal-cell create-script-modal-characters">
       <h2 class="create-script-modal-h2">Персонажи <span class="add-btn">+</span></h2>
-      <button class="btn">Выбрать из игры</button>
-      <Scrollview :w="'100%'" :h="'200px'">
+      <button type="button" class="btn">Выбрать из игры</button>
+      <Scrollview :w="'100%'" :h="'200px'" :class="{error: this.errors.characters}" >
         <CharacterItem />
         <CharacterItem />
       </Scrollview>
+      <span class="error-label" v-if="this.errors.characters">Это поле обязательно для заполнения</span>
     </div>
     <div class="create-script-modal-cell create-script-modal-description">
       <h2 class="create-script-modal-h2">Краткое содержание</h2>
-      <textarea class="input create-script-modal-description-input" />
+      <textarea class="input create-script-modal-description-input" v-model="description" :class="{error: this.errors.description}" />
+      <span class="error-label" v-if="this.errors.description">Это поле обязательно для заполнения</span>
     </div>
     <div class="create-script-modal-cell create-script-modal-getting-item">
-      <PlayerGetsSettings :checkbox="'предмет'" :input="'Предмет'"/>
+      <PlayerGetsSettings :checkbox="'предмет'" :input="'Предмет'" ref="playerGetsSettingsItem" />
     </div>
     <div class="create-script-modal-cell create-script-modal-getting-info">
-      <PlayerGetsSettings :checkbox="'информацию'" :input="'Информация'"/>
+      <PlayerGetsSettings :checkbox="'информацию'" :input="'Информация'" ref="playerGetsSettingsInfo"/>
     </div>
     <div class="create-script-modal-cell create-script-modal-additional">
       <h2 class="create-script-modal-h2">Дополнительно</h2>
-      <textarea class="input create-script-modal-additional-input" />
+      <textarea class="input create-script-modal-additional-input" v-model="additional" />
     </div>
   </div>
 </template>
@@ -112,5 +182,9 @@ export default {
   }
   .add-btn {
     cursor: pointer;
+  }
+  .input-wrapper {
+    display: flex;
+    flex-direction: column;
   }
 </style>

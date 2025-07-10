@@ -1,7 +1,7 @@
 ﻿<script>
 import ScriptItem from "@/components/ScriptItem.vue";
 export default {
-  props: ['game'],
+  props: ['scene'],
   data(){
     return {
       isOpen: false,
@@ -13,7 +13,7 @@ export default {
       this.isOpen = !this.isOpen;
     },
     addScript() {
-      this.$emit('addScript', this.game);
+      this.$emit('addScript', this.scene);
     }
   }
 }
@@ -29,8 +29,8 @@ export default {
 
     <transition name="panel">
       <div v-show="isOpen" class="panel">
-        <ScriptItem v-for="script of game.scripts" :script="script"/>
-        <span v-if="game.scripts.length === 0" class="no-scripts">There's no scripts in this game</span>
+        <ScriptItem v-for="script of scene.scripts" :script="script"/>
+        <span v-if="scene.scripts.length === 0" class="no-scripts">There's no scripts in this game</span>
       </div>
     </transition>
   </div>

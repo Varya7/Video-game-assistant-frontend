@@ -1,7 +1,7 @@
 ﻿<template>
   <div id="sidebar">
     <CreateGame/>
-    <Games @addScript="addScript" v-bind:games="games"/>
+    <Scenes @addScript="addScript" :scenes="scenes"/>
   </div>
 </template>
 
@@ -13,17 +13,17 @@
 
 <script>
 import CreateGame from "@/components/CreateGame.vue";
-import Games from "@/components/Games.vue";
+import Scenes from "@/components/Scenes.vue";
 export default {
   name: 'Sidebar',
-  props: ['games'],
+  props: ['scenes'],
   components: {
     CreateGame,
-    Games
+    Scenes
   },
   methods: {
-    addScript(game) {
-      this.$emit('addScript', game);
+    addScript(scene) {
+      this.$emit('addScript', scene);
     }
   }
 }

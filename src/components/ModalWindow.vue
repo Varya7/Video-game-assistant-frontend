@@ -6,6 +6,9 @@ export default{
   methods: {
     closeModal(){
       this.$emit('closeModal', false)
+    },
+    handleSubmit(data) {
+      this.$emit('validate-request', data);
     }
   }
 }
@@ -14,7 +17,7 @@ export default{
 <template>
   <div class="modal-window-container">
     <div class="modal-window-background"></div>
-    <form class="modal-dialog" @submit.prevent="">
+    <form class="modal-dialog noselect" @submit.prevent="handleSubmit">
       <button class="modal-dialog-close" @click="closeModal">X</button>
       <div class="modal-dialog-header"><h1>{{header}}</h1></div>
       <div class="modal-dialog-body"><slot></slot></div>
