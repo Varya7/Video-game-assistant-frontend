@@ -1,9 +1,11 @@
 ﻿<script>
+import { Script } from "@/types.ts";
+
 export default {
     name: 'ScriptItem',
     props: {
       script: {
-        type: Object,
+        type: Script,
         required: true
       }
     }
@@ -12,10 +14,16 @@ export default {
 
 <template>
   <div class="script-item">
-    {{script}}
+    {{script.name}}
   </div>
 </template>
 
 <style scoped>
-
+  .script-item {
+    cursor: pointer;
+    width: 100%;
+  }
+  .script-item:hover {
+    background: #eeeeee;
+  }
 </style>

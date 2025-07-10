@@ -1,6 +1,6 @@
 ﻿<template>
   <div id="sidebar">
-    <CreateGame/>
+    <CreateScene/>
     <Scenes @addScript="addScript" :scenes="scenes"/>
   </div>
 </template>
@@ -12,13 +12,13 @@
 </style>
 
 <script>
-import CreateGame from "@/components/CreateGame.vue";
+import CreateScene from "@/components/CreateScene.vue";
 import Scenes from "@/components/Scenes.vue";
 export default {
   name: 'Sidebar',
   props: ['scenes'],
   components: {
-    CreateGame,
+    CreateScene,
     Scenes
   },
   methods: {

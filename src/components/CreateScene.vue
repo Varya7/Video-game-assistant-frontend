@@ -1,6 +1,8 @@
 ﻿<script>
-  export default {
-    name: 'CreateGame',
+import {Character, Script} from "@/types.ts";
+
+export default {
+    name: 'CreateScene',
     data() {
       return{
         title: ''
@@ -9,14 +11,14 @@
     methods: {
       onSubmit() {
         if (this.title.trim()) {
-          const newGame = {
+          const newScene = {
             id: Date.now(),
-            title: this.title,
+            name: this.title,
             scripts: [],
-            characters: []
+            characters: [],
           }
           this.title = '';
-          this.$parent.$emit('create', newGame);
+          this.$parent.$emit('create', newScene);
         }
       }
     }
@@ -26,7 +28,7 @@
 <template>
   <form id="create-game" @submit.prevent="onSubmit">
     <input v-model="title" placeholder="Test" type="text" name="games" class="input" />
-    <button type="submit" class="btn">Create new game</button>
+    <button type="submit" class="btn">Создать сцену</button>
   </form>
 </template>
 

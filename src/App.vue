@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Sidebar :scenes="state.games[state.selectedGameId].scenes" @create="createGame" @addScript="addScript"/>
+    <Sidebar :scenes="state.games[state.games.findIndex(game => game.id === state.selectedGameId)].scenes" @create="createScene" @addScript="addScript"/>
     <Main/>
     <ModalWindow v-if="createScriptModalOpened" :header="'Создать сценарий'" @closeModal="setCreateScriptModalState" @validate-request="saveScript"><CreateScriptModal ref="child"/></ModalWindow>
   </div>
@@ -15,7 +15,7 @@ import CreateScriptModal from "@/components/CreateScriptModal.vue";
 import {submitData} from "@/api/api.ts";
 import {state, defaultState} from '@/store.ts';
 import './types.ts';
-import {Character} from "@/types.ts";
+import {Character, Script} from "@/types.ts";
 //submitData();
 export default {
   name: 'App',
@@ -40,14 +40,13 @@ export default {
       });
       this.games.push(game);
     },
-    createScene(game) {
+    createScene(scene) {
       state.games[state.selectedGameId].scenes.push({
-        id: game.id.toString(),
-        name: game.title,
-        scenes: [],
-        characters: [],
+        id: scene.id,
+        name: scene.name,
+        scripts: scene.scripts,
+        characters: scene.characters
       });
-      this.games.push(game);
     },
     setCreateScriptModalState(state) {
       this.createScriptModalOpened = state;
@@ -81,6 +80,7 @@ export default {
           additional: child.additional
         });
       }
+      this.setCreateScriptModalState(false);
     }
   },
   data() {
