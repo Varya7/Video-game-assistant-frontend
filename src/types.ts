@@ -22,6 +22,7 @@ export interface Script {
 export interface Scene {
     id: string
     name: string
+    description: string
     scripts: Script[]
     characters: Character[]
 }

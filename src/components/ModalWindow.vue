@@ -16,7 +16,7 @@ export default{
 
 <template>
   <div class="modal-window-container">
-    <div class="modal-window-background"></div>
+    <div class="modal-window-background" @click="closeModal"></div>
     <form class="modal-dialog noselect" @submit.prevent="handleSubmit">
       <button class="modal-dialog-close" @click="closeModal">X</button>
       <div class="modal-dialog-header"><h1>{{header}}</h1></div>

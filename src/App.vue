@@ -1,9 +1,10 @@
 <template>
   <div id="app">
-    <Sidebar :scenes="state.games[state.games.findIndex(game => game.id === state.selectedGameId)].scenes" @create="createScene" @addScript="addScript"/>
+    <Sidebar :scenes="state.games[state.games.findIndex(game => game.id === state.selectedGameId)].scenes" @addScene="addScene" @addScript="addScript"/>
     <Main/>
     <ModalWindow v-if="createScriptModalOpened" :header="'Создать сценарий'" @closeModal="setCreateScriptModalState" @validate-request="saveScript"><CreateScriptModal ref="child"/></ModalWindow>
     <ModalWindow v-if="createSceneModalOpened" :header="'Создать сцену'" @closeModal="setCreateSceneModalState" @validate-request="saveScene"><CreateSceneModal ref="sceneChild"/></ModalWindow>
+    <!--<Games/>-->
   </div>
 </template>
 
@@ -18,7 +19,9 @@ import CreateSceneModal from "@/components/CreateSceneModal.vue";
 import {state, defaultState} from '@/store.ts';
 import './types.ts';
 import {Character, Script} from "@/types.ts";
+import Games from "@/components/Games/Games.vue";
 //submitData();
+//console.log(state.games[state.games.findIndex(game => game.id === state.selectedGameId)].scenes)
 export default {
   name: 'App',
   computed: {
@@ -27,6 +30,7 @@ export default {
     }
   },
   components: {
+    Games,
     CreateScriptModal,
     CreateSceneModal,
     ModalWindow,
@@ -66,7 +70,7 @@ export default {
       this.createScriptSceneId = scene;
     },
     addScene() {
-      this.setCreateScriptModalState(true);
+      this.setCreateSceneModalState(true);
     },
     saveScript() {
       if(this.$refs.child.validate()) {
@@ -93,25 +97,16 @@ export default {
     },
     saveScene() {
       if (this.$refs.sceneChild.validate()) {
-        let child = this.$refs.child;
-        let game = state.games[state.games.findIndex(game => game.id === this.createScriptGameId)];
-        let scenes = game.scenes;
-        scenes[scenes.findIndex(gameId => gameId === this.createScriptSceneId)].scripts.push({
+        let child = this.$refs.sceneChild;
+        let game = state.games[state.games.findIndex(game => game.id === state.selectedGameId)];
+        game.scenes.push({
           id: Date.now(),
           name: child.name,
-          answersCount: child.answers_count,
-          branchesCount: child.branches_count,
-          character: {},
+          character: child.characters,
           description: child.description,
-          getsItem: child.itemData.gets,
-          itemName: child.itemData.name,
-          itemCondition: child.itemData.condition,
-          getsInfo: child.infoData.gets,
-          infoName: child.infoData.name,
-          infoCondition: child.infoData.condition,
-          additional: child.additional
+          scripts: []
         });
-        this.setCreateScriptModalState(false);
+        this.setCreateSceneModalState(false);
       }
     }
   },
@@ -121,7 +116,7 @@ export default {
         {id: 2, title: 'Game 2', scripts: [], characters: []},
       ],
       createScriptModalOpened: false,
-      createSceneModalOpened: true,
+      createSceneModalOpened: false,
       createScriptGameId: null,
       scenes: []
     };

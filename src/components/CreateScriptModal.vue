@@ -138,7 +138,7 @@ export default {
     grid-template-rows: repeat(4, auto);
     width: 100%;
     height: 100%;
-    grid-gap: 10px;
+    grid-gap: 20px;
   }
   .create-script-modal-h2{
     text-align: left;
